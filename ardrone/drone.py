@@ -29,16 +29,29 @@ class ARDrone(object):
         self.speed = 0.2
         self.at(ardrone.at.config, 'general:navdata_demo', 'TRUE')
         self.at(ardrone.at.config, 'control:altitude_max', '20000')
-        self.video_pipe, video_pipe_other = multiprocessing.Pipe()
-        self.nav_pipe, nav_pipe_other = multiprocessing.Pipe()
-        self.com_pipe, com_pipe_other = multiprocessing.Pipe()
-        self.network_process = ardrone.network.ARDroneNetworkProcess(self.host, nav_pipe_other, video_pipe_other, com_pipe_other)
-        self.network_process.start()
-        self.ipc_thread = ardrone.network.IPCThread(self)
-        self.ipc_thread.start()
-        self.image = PIL.Image.new('RGB', (640, 360))
-        self.navdata = dict()
+
+        self.image = None
+        self.navdata = None
+
+        self.video_thread = ardrone.network.VidThread(
+            self.host,
+            self.image_callback
+        )
+        self.navdata_thread = ardrone.network.NavThread(
+            self.host,
+            self.navdata_callback
+        )
+        self.video_thread.start()
+        self.navdata_thread.start()
+
         self.time = 0
+
+    def image_callback(self, im_data):
+        w, h, img = im_data
+        self.image = PIL.Image.frombuffer('RGB', (w, h), img, 'raw', 'RGB', 0, 1)
+
+    def navdata_callback(self, navdata):
+        self.navdata = navdata
 
     def takeoff(self):
         """Make the drone takeoff."""
