@@ -4,7 +4,6 @@ Python library for the AR.Drone.
 
 import time
 import threading
-import multiprocessing
 
 import PIL.Image
 
