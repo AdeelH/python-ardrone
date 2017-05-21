@@ -27,6 +27,7 @@ class ARDrone(object):
         self.lock = threading.Lock()
         self.speed = 0.2
         self.at(ardrone.at.config, 'general:navdata_demo', 'TRUE')
+        self.at(ardrone.at.config, 'control:control_level', '3')
         self.at(ardrone.at.config, 'control:altitude_max', '20000')
 
         self.image = None
