@@ -170,14 +170,12 @@ class ARDrone(object):
             right"""
         self.at(ardrone.at.pcmd, True, lr, fb, vv, va)
 
-    def move2(self, lr, fb, vv, va):
-        """Makes the drone move (translate/rotate).
+    def move2(self, vv, va):
+        """Makes the drone move (up-down and rotate only) while trying
+        to stay above the same point on the ground.
 
         Parameters:
-        lr -- left-right tilt: float [-1..1] negative: left, positive: right
-        fb -- front-back tilt: float [-1..1] negative: forwards, positive:
-            backwards
         vv -- vertical speed: float [-1..1] negative: go down, positive: rise
         va -- angular speed: float [-1..1] negative: spin left, positive: spin
             right"""
-        self.at(ardrone.at.pcmd, False, lr, fb, vv, va)
+        self.at(ardrone.at.pcmd, False, 0, 0, vv, va)
